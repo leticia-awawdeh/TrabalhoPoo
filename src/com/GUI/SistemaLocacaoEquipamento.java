@@ -23,6 +23,12 @@ public class SistemaLocacaoEquipamento {
     private JTextField textField5;
     private JButton registrarLocaçãoButton;
     private JButton cancelarLocaçãoButton;
+    private JTextField textField6;
+    private JTextField textField7;
+    private JButton buscarButton1;
+    private JButton buscarButton;
+    private JButton confirmarDevoluçãoButton;
+    private JComboBox comboBox2;
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
