@@ -1,3 +1,5 @@
+package com.Backend;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class Databse {
         return listaLocacoes;
     }
 
-    // Métodos de Cliente
+    // Métodos de com.Backend.Cliente
     public static void adicionarCliente(Cliente c) {
         listaClientes.add(c);
     }

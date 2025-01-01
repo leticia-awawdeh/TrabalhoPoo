@@ -1,3 +1,5 @@
+package com.Backend;
+
 public class Cliente {
     private String nome;
     private String cpf;
@@ -23,7 +25,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" +
+        return "com.Backend.Cliente{" +
                 "nomeCompleto='" + nome + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", telefone='" + telefone + '\'' +

@@ -1,6 +1,12 @@
+package com.Backend;
+
+import java.util.Random;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Equipamento {
-    private static int contadorCodigo = 1; // Gerador de códigos únicos
+    private static final Set<Integer> codigosUsados = new HashSet<>();
+
     private int codigo; // Código único gerado automaticamente
     private String nome; // Nome do equipamento
     private String descricao; // Descrição do equipamento
@@ -8,13 +14,26 @@ public class Equipamento {
     private Status status; // Disponível ou Alugado
 
     public Equipamento(String nome, String descricao, double valorDiario) {
-        this.codigo = contadorCodigo++; // Código gerado automaticamente
+        this.codigo = gerarCodigoEquip(); // Código gerado automaticamente
         this.nome = nome;
         this.descricao = descricao;
         this.valorDiario = valorDiario;
-        this.status = Status.DISPONIVEL; // Equipamento está disponível por padrão
+        this.status = Status.DISPONIVEL; // com.Backend.Equipamento está disponível por padrão
     }
 
+    private static int gerarCodigoEquip(){
+        Random random = new Random();
+        int codigo;
+
+        do {
+            codigo = 10000000 + random.nextInt(90000000);
+        }while (codigosUsados.contains(codigo));
+
+        codigosUsados.add(codigo);
+
+        return codigo;
+
+    }
     // Getters e Setters
     public int getCodigo() {
         return codigo;
@@ -42,12 +61,12 @@ public class Equipamento {
 
     @Override
     public String toString() {
-        return "Equipamento{" +
-                "codigo=" + codigo +
-                ", nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", valorDiario=" + valorDiario +
-                ", status='" + status +
+        return "com.Backend.Equipamento{" +
+                "codigo:" + codigo +
+                ", nome:'" + nome + '\'' +
+                ", descricao:'" + descricao + '\'' +
+                ", valorDiario:" + valorDiario +
+                ", status:'" + status +
                 '}';
     }
 }

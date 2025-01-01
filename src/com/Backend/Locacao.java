@@ -1,3 +1,5 @@
+package com.Backend;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -72,7 +74,7 @@ public class Locacao {
 
     @Override
     public String toString() {
-        return "Locacao{" +
+        return "com.Backend.Locacao{" +
                 "cliente=" + cliente +
                 ", equipamento=" + equipamento +
                 ", dataInicio=" + dataInicio +
