@@ -1,6 +1,6 @@
 
 public class Equipamento {
-    private static int contadorCodigo = 0; // Gerador de códigos únicos
+    private static int contadorCodigo = 1; // Gerador de códigos únicos
     private int codigo; // Código único gerado automaticamente
     private String nome; // Nome do equipamento
     private String descricao; // Descrição do equipamento
@@ -8,7 +8,7 @@ public class Equipamento {
     private Status status; // Disponível ou Alugado
 
     public Equipamento(String nome, String descricao, double valorDiario) {
-        this.codigo = ++contadorCodigo; // Código gerado automaticamente
+        this.codigo = contadorCodigo++; // Código gerado automaticamente
         this.nome = nome;
         this.descricao = descricao;
         this.valorDiario = valorDiario;
@@ -42,8 +42,13 @@ public class Equipamento {
 
     @Override
     public String toString() {
-        return "Equipamento [Código=" + codigo + ", Nome=" + nome + ", Descrição=" + descricao +
-                ", Valor Diário=R$ " + valorDiario + ", Status=" + status + "]";
+        return "Equipamento{" +
+                "codigo=" + codigo +
+                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", valorDiario=" + valorDiario +
+                ", status='" + status +
+                '}';
     }
 }
 

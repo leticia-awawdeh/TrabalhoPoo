@@ -1,3 +1,4 @@
 public enum Status {
-    ALUGADO, DISPONIVEL;
+    DISPONIVEL,
+    ALUGADO;
 }

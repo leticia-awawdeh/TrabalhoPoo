@@ -1,77 +1,105 @@
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 
 public class CadastroEquip {
-    /*Cadastro de equipamentos: permitir que o operador cadastre os equipamentos
-    * que estarão disponíveis para locação
-    *
-    * Campos obrigatórios:
-    *       Nome do equipamento,
-    *       Código único do equipamento(gerado automaticamente)
-    *       Descrição
-    *       Valor diário de locação
-    *       Status(disponível ou alugado)*/
+    private List<Equipamento> equipamentos;
+    private List<Locacao> locacoes;
 
-    private String nomeEquip;
-    private String descricao;
-    private int codigoEquip;
-    private double valorDiario;
-    private CadastroEquip.Status Status;
-
-    enum Status {ALUGADO, DISPONIVEL};
-
-
-
-    //construtor
-    public void cadastrarEquipamento(String nomeEquip, String descricao, double valorDiario, int codigoEquip){
-        this.nomeEquip = nomeEquip;
-        this.codigoEquip = gerarCodigo();
-        this.descricao = descricao;
-        this.valorDiario = valorDiario;
-        this.Status = Status.DISPONIVEL;
+    public CadastroEquip() {
+        this.equipamentos = new ArrayList<>();
+        this.locacoes = new ArrayList<>();
     }
 
-    //Função para gerar código aleatório e único para cada equipamento
-    public int gerarCodigo(){
-        Random random = new Random();
-        int numero = 100000 + random.nextInt(900000);
-        return numero;
+    public void cadastrarEquipamento(String nome, String descricao, double valorDiario) {
+        Equipamento equipamento = new Equipamento(nome, descricao, valorDiario);
+        equipamentos.add(equipamento);
+        System.out.println("Equipamento cadastrado com sucesso: " + equipamento);
     }
 
-    //Getters and Setters
-
-    public void setNomeEquip(String nomeEquip) {
-        this.nomeEquip = nomeEquip;
+    public void listarEquipamentos() {
+        if (equipamentos.isEmpty()) {
+            System.out.println("Nenhum equipamento cadastrado.");
+        } else {
+            for (Equipamento equipamento : equipamentos) {
+                System.out.println(equipamento);
+            }
+        }
     }
 
-    public String getNomeEquip() {
-        return nomeEquip;
+    public void registrarLocacao(Cliente cliente, int codigoEquipamento, LocalDate dataInicio, LocalDate dataPrevistaDevolucao, double multaDiaria) {
+        Equipamento equipamento = buscarEquipamentoPorCodigo(codigoEquipamento);
+
+        if (equipamento != null && equipamento.getStatus() == Status.DISPONIVEL) {
+            equipamento.setStatus(Status.ALUGADO);
+            Locacao locacao = new Locacao(cliente, equipamento, dataInicio, dataPrevistaDevolucao, multaDiaria);
+            locacoes.add(locacao);
+            System.out.println("Locação registrada com sucesso: " + locacao);
+        } else {
+            System.out.println("Equipamento não disponível para locação.");
+        }
     }
 
+    public void registrarDevolucao(int codigoEquipamento, LocalDate dataDevolucao) {
+        Locacao locacao = buscarLocacaoPorCodigoEquipamento(codigoEquipamento);
 
-    public void setCodigoEquip(int codigoEquip) {
-        this.codigoEquip = codigoEquip;
+        if (locacao != null) {
+            locacao.setDataDevolucao(dataDevolucao);
+            Equipamento equipamento = locacao.getEquipamento();
+            equipamento.setStatus(Status.DISPONIVEL);
+
+            System.out.println("Devolução registrada com sucesso: ");
+            System.out.println("Valor do aluguel: R$ " + locacao.getValorTotalEstimado());
+            System.out.println("Multa (se houver): R$ " + locacao.calcularMulta());
+            System.out.println("Total a pagar: R$ " + locacao.calcularValorTotal());
+        } else {
+            System.out.println("Locação não encontrada para o código do equipamento fornecido.");
+        }
     }
 
-    public int getCodigoEquip() {
-        return codigoEquip;
+    private Equipamento buscarEquipamentoPorCodigo(int codigo) {
+        for (Equipamento equipamento : equipamentos) {
+            if (equipamento.getCodigo() == codigo) {
+                return equipamento;
+            }
+        }
+        return null;
     }
 
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    private Locacao buscarLocacaoPorCodigoEquipamento(int codigoEquipamento) {
+        for (Locacao locacao : locacoes) {
+            if (locacao.getEquipamento().getCodigo() == codigoEquipamento) {
+                return locacao;
+            }
+        }
+        return null;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public void gerarRelatorioEquipamentosMaisAlugados() {
+        Map<Equipamento, Integer> frequenciaAluguel = new HashMap<>();
+
+        for (Locacao locacao : locacoes) {
+            Equipamento equipamento = locacao.getEquipamento();
+            frequenciaAluguel.put(equipamento, frequenciaAluguel.getOrDefault(equipamento, 0) + 1);
+        }
+
+        List<Map.Entry<Equipamento, Integer>> listaEquipamentos = new ArrayList<>(frequenciaAluguel.entrySet());
+        listaEquipamentos.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        Relatorio.exibirRelatorioEquipamentosMaisAlugados(listaEquipamentos);
     }
 
+    public void gerarRelatorioClientesComMultasAcumuladas() {
+        Map<Cliente, Double> multasAcumuladas = new HashMap<>();
 
-    public void setValorDiario(double valorDiario) {
-        this.valorDiario = valorDiario;
+        for (Locacao locacao : locacoes) {
+            Cliente cliente = locacao.getCliente();
+            double multa = locacao.calcularMulta();
+            multasAcumuladas.put(cliente, multasAcumuladas.getOrDefault(cliente, 0.0) + multa);
+        }
+
+        List<Map.Entry<Cliente, Double>> listaClientes = new ArrayList<>(multasAcumuladas.entrySet());
+        listaClientes.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        Relatorio.exibirRelatorioClientesComMultasAcumuladas(listaClientes);
     }
-
-    public double getValorDiario() {
-        return valorDiario;
-    }
-
 }
